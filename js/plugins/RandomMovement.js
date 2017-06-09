@@ -46,6 +46,71 @@
     }
   };
 
+//var _Game_Character_moveRandom = Game_Character.prototype.moveRandom
+Game_Event.prototype.moveTypeRandom = function() {
+  availableMoves = [];
+  if(this.canPass(this.x, this.y, this.direction())) {
+    availableMoves.push(this.moveForward);
+    availableMoves.push(this.moveForward);
+  }
+
+  if(this.canPass(this.x, this.y, this.right90Direction())) {
+    availableMoves.push(this.moveRight);
+  }
+
+  if(this.canPass(this.x, this.y, this.left90Direction())) {
+    availableMoves.push(this.moveLeft);
+  }
+
+  if(availableMoves.length == 0) {
+    availableMoves.push(this.turn180);
+  } else {
+    //availableMoves.push(this.wait20Frames);
+  }
+
+  move = Math.randomInt(availableMoves.length)
+  availableMoves[move].call(this);
+};
+
+Game_Character.prototype.moveLeft = function() {
+  this.moveStraight(this.left90Direction());
+};
+
+Game_Character.prototype.moveRight = function() {
+  this.moveStraight(this.right90Direction());
+};
+
+Game_Character.prototype.wait20Frames = function() {
+  this._waitCount = 20 - 1;
+};
+
+Game_Character.prototype.left90Direction = function() {
+  switch (this.direction()) {
+    case 2:
+      return 6;
+    case 4:
+      return 2;
+    case 6:
+      return 8;
+    case 8:
+      return 4;
+  }
+};
+
+Game_Character.prototype.right90Direction = function() {
+  switch (this.direction()) {
+    case 6:
+      return 2;
+    case 2:
+      return 4;
+    case 8:
+      return 6;
+    case 4:
+      return 8
+  }
+};
+
+
 
   // NOTE: THIS WILL NOT MAKE YOU A DARK WIZARD. HERE ARE SOME BASE FOR YOU TO LAY A FOUNDATION FOR PLUGINS!
 // Now find something you want to edit in the core plugins.  You can
