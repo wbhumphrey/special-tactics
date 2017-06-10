@@ -1,12 +1,11 @@
 [
 null,
-{"id":1,"expanded":false,"name":"Field Map","order":1,"parentId":0,"scrollX":537.5,"scrollY":388.5},
-{"id":2,"expanded":true,"name":"Normal Town","order":2,"parentId":0,"scrollX":985.5,"scrollY":1370.5},
-{"id":3,"expanded":false,"name":"Stone Cave","order":4,"parentId":0,"scrollX":1111.5,"scrollY":836.5},
-{"id":4,"expanded":false,"name":"Inn 1F","order":3,"parentId":2,"scrollX":529.5,"scrollY":571.5},
-{"id":5,"expanded":false,"name":"Ending","order":5,"parentId":0,"scrollX":537.5,"scrollY":388.5},
-{"id":6,"expanded":false,"name":"MAP006","order":9,"parentId":0,"scrollX":529.5,"scrollY":380.5},
-{"id":7,"expanded":false,"name":"Deserted Meadow","order":6,"parentId":0,"scrollX":685.5,"scrollY":549.5},
-{"id":8,"expanded":false,"name":"Lost Forest","order":7,"parentId":0,"scrollX":2890,"scrollY":1306},
-{"id":9,"expanded":false,"name":"Castle","order":8,"parentId":0,"scrollX":1398.5,"scrollY":1850.5}
+null,
+null,
+null,
+null,
+null,
+{"id":6,"expanded":false,"name":"MAP006","order":2,"parentId":0,"scrollX":730,"scrollY":534.6666666666666},
+null,
+{"id":8,"expanded":false,"name":"Lost Forest","order":1,"parentId":0,"scrollX":2555.3333333333335,"scrollY":977.3333333333334}
 ]
