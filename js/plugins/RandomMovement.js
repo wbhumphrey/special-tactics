@@ -46,7 +46,20 @@
     }
   };
 
-  Game_Character.prototype.movePatrol = function(regionId) {
+  Game_Character.prototype.guardRegion = function(regionId) {
+    if(this.canSeePlayer()) {
+      this.moveTowardPlayer();
+    } else {
+      this.patrolRegion();
+    }
+  }
+
+  Game_Character.prototype.canSeePlayer = function() {
+    distance = Math.squrt(Math.pow(this.x - $gamePlayer.x, 2) + Math.pow(this.y - $gamePlayer.y, 2))
+    return distance <= 5;
+  }
+
+  Game_Character.prototype.patrolRegion = function(regionId) {
     canPass = function(x, y, d) {
       var x2 = $gameMap.roundXWithDirection(x, d);
       var y2 = $gameMap.roundYWithDirection(y, d);
