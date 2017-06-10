@@ -46,17 +46,16 @@
     }
   };
 
+  /**
+    * New Move Commands
+    */
+
   Game_Character.prototype.guardRegion = function(regionId) {
     if(this.canSeePlayer()) {
       this.moveTowardPlayer();
     } else {
-      this.patrolRegion();
+      this.patrolRegion(regionId);
     }
-  }
-
-  Game_Character.prototype.canSeePlayer = function() {
-    distance = Math.squrt(Math.pow(this.x - $gamePlayer.x, 2) + Math.pow(this.y - $gamePlayer.y, 2))
-    return distance <= 5;
   }
 
   Game_Character.prototype.patrolRegion = function(regionId) {
@@ -96,6 +95,88 @@
     availableMoves[move].call(this);
   };
 
+  /**
+    * Utility Functions
+    */
+
+  Game_Character.DOWN = 2;
+  Game_Character.LEFT = 4;
+  Game_Character.RIGHT = 6;
+  Game_Character.UP = 8;
+
+  Game_Character.prototype.canSeePlayer = function() {
+    var gc = Game_Character;
+
+    distance = Math.sqrt(Math.pow(this.x - $gamePlayer.x, 2) + Math.pow(this.y - $gamePlayer.y, 2))
+    //what to do if this.x - $gamePlayer.x == 0
+    m = (this.y - $gamePlayer.y) / (this.x - $gamePlayer.x)
+
+    var y = this.y;
+    var x = this.x;
+    var incrementXY;
+    var b = y - m * x;
+
+    var xDirection = null;
+    var yDirection = null;
+
+    var xDiff = $gamePlayer.x - this.x
+    var yDiff = $gamePlayer.y - this.y
+
+    if (xDiff == 0){
+      if (yDiff > 0){
+        incrementXY = function() { y-- };
+        yDirection = gc.DOWN;
+      } else {
+        incrementXY = function() { y++ };
+        yDirection = gc.UP;
+      }
+    } else if(yDiff == 0){
+      if (xDiff > 0){
+        incrementXY = function() { x-- };
+        xDirection = gc.RIGHT;
+      } else {
+        incrementXY = function() { x++ };
+        xDirection = gc.LEFT;
+      }
+    } else {
+      /*
+        If slope is negative and y diff is negative x needs to increase
+        If slope is negative and y diff is positive x needs to decrease
+        If slope is positive and y diff is negative x needs to decrease
+        If slope is positive and y diff is positive x needs to increase
+
+        If slope * y diff is positive x needs to increase
+        If slope * y diff is negative x needs to decrease
+      */
+    }
+
+    lastDistance = Math.sqrt(Math.pow(this.x - $gamePlayer.x, 2) + Math.pow(this.y - $gamePlayer.y, 2))
+    incrementXY();
+    distance = Math.sqrt(Math.pow(this.x - $gamePlayer.x, 2) + Math.pow(this.y - $gamePlayer.y, 2))
+
+    while (distance < lastDistance && distance != 0) {
+      y = m * x + b;
+
+      if (!$gameMap.isDiagonallyPassable(Math.round(x), Math.round(y), xDirection, yDirection)) {
+        return false;
+      }
+
+      lastDistance = distance
+      incrementXY();
+      distance = Math.sqrt(Math.pow(this.x - $gamePlayer.x, 2) + Math.pow(this.y - $gamePlayer.y, 2))
+    }
+
+    return distance <= 5;
+  }
+
+  Game_Map.prototype.isDiagonallyPassable = function(x, y, horz, vert) {
+    return (!horz || this.isPassable(x, y, hor)) && (!vert || this.isPassable(x, y, vert))
+  }
+
+  Game_character.prototype.distanceTo = function(gc) {
+    Math.squrt(Math.pow(this.x - gc.x, 2) + Math.pow(this.y - gc.y, 2))
+  }
+
   Game_Character.prototype.moveLeft = function() {
     this.moveStraight(this.left90Direction());
   };
@@ -109,28 +190,32 @@
   };
 
   Game_Character.prototype.left90Direction = function() {
-    switch (this.direction()) {
-      case 2:
-        return 6;
-      case 4:
-        return 2;
-      case 6:
-        return 8;
-      case 8:
-        return 4;
+    var gc = Game_Character;
+    switch(this.direction()){
+      case gc.DOWN:
+        return gc.RIGHT;
+      case gc.RIGHT:
+        return gc.UP;
+      case gc.UP:
+        return gc.LEFT;
+      case gc.LEFT;
+        return gc.DOWN;
+      }
     }
   };
 
   Game_Character.prototype.right90Direction = function() {
-    switch (this.direction()) {
-      case 6:
-        return 2;
-      case 2:
-        return 4;
-      case 8:
-        return 6;
-      case 4:
-        return 8
+    var gc = Game_Character;
+    switch(this.direction()){
+      case gc.RIGHT:
+        return gc.DOWN;
+      case gc.UP:
+        return gc.RIGHT;
+      case gc.LEFT:
+        return gc.UP;
+      case gc.DOWN;
+        return gc.LEFT;
+      }
     }
   };
 
