@@ -139,6 +139,15 @@
         xDirection = gc.LEFT;
       }
     } else {
+      slope = (this.y - $gamePlayer.y) / (this.x - $gamePlayer.x)
+
+      if slope > 1 {
+        // increment y
+      } else {
+        // increment x
+      }
+
+
       /*
         If slope is negative and y diff is negative x needs to increase
         If slope is negative and y diff is positive x needs to decrease
