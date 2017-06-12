@@ -132,7 +132,7 @@
     } else {
       var slope = (y - $gamePlayer.y) / (x - $gamePlayer.x);
       var yIntercept = y - slope * x;
-      var increment = distance / (Math.abs(xDiff) + Math.abs(yDiff)) * (Math.abs(xDiff) / xDiff);
+      var increment = slope == 0 ? 1 : xDiff / slope;
 
       while(this.distanceTo(x,y) < distance) {
         x += increment;
