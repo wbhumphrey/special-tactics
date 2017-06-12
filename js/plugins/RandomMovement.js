@@ -115,6 +115,7 @@
     var yDirection = this.direction();
 
     var xDiff = $gamePlayer.x - this.x;
+    var yDiff = $gamePlayer.y - this.y;
 
     var distance = this.distanceTo($gamePlayer.x, $gamePlayer.y);
 
@@ -131,7 +132,7 @@
     } else {
       var slope = (y - $gamePlayer.y) / (x - $gamePlayer.x);
       var yIntercept = y - slope * x;
-      var increment = distance / ($gamePlayer.x - this.x);
+      var increment = distance / (Math.abs(xDiff) + Math.abs(yDiff)) * (Math.abs(xDiff) / xDiff);
 
       while(this.distanceTo(x,y) < distance) {
         x += increment;
