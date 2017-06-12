@@ -110,8 +110,9 @@
     var y = this.y;
     var x = this.x;
 
-    var xDirection = null;
-    var yDirection = null;
+    var direction = this.direction();
+    var xDirection = this.direction();
+    var yDirection = this.direction();
 
     var xDiff = $gamePlayer.x - this.x;
 
@@ -132,25 +133,25 @@
       var yIntercept = y - slope * x;
       var increment = distance / ($gamePlayer.x - this.x);
 
-      do {
+      while(this.distanceTo(x,y) < distance) {
         x += increment;
         y = slope * x + yIntercept;
 
         if(!$gameMap.isDiagonallyPassable(Math.round(x), Math.round(y), xDirection, yDirection)){
           return false;
         }
-      } while(this.distanceTo(x,y) < distance);
+      }
     }
 
     return true;
   }
 
   Game_Map.prototype.isDiagonallyPassable = function(x, y, horz, vert) {
-    return (!horz || this.isPassable(x, y, hor)) && (!vert || this.isPassable(x, y, vert))
+    return (!horz || this.isPassable(x, y, horz)) && (!vert || this.isPassable(x, y, vert))
   }
 
-  Game_character.prototype.distanceTo = function(x, y) {
-    Math.squrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2))
+  Game_Character.prototype.distanceTo = function(x, y) {
+    return Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2))
   }
 
   Game_Character.prototype.moveLeft = function() {
@@ -174,9 +175,8 @@
         return gc.UP;
       case gc.UP:
         return gc.LEFT;
-      case gc.LEFT;
+      case gc.LEFT:
         return gc.DOWN;
-      }
     }
   };
 
@@ -189,9 +189,8 @@
         return gc.RIGHT;
       case gc.LEFT:
         return gc.UP;
-      case gc.DOWN;
+      case gc.DOWN:
         return gc.LEFT;
-      }
     }
   };
 
