@@ -107,83 +107,50 @@
   Game_Character.prototype.canSeePlayer = function() {
     var gc = Game_Character;
 
-    distance = Math.sqrt(Math.pow(this.x - $gamePlayer.x, 2) + Math.pow(this.y - $gamePlayer.y, 2))
-    //what to do if this.x - $gamePlayer.x == 0
-    m = (this.y - $gamePlayer.y) / (this.x - $gamePlayer.x)
-
     var y = this.y;
     var x = this.x;
-    var incrementXY;
-    var b = y - m * x;
 
     var xDirection = null;
     var yDirection = null;
 
-    var xDiff = $gamePlayer.x - this.x
-    var yDiff = $gamePlayer.y - this.y
+    var xDiff = $gamePlayer.x - this.x;
+
+    var distance = this.distanceTo($gamePlayer.x, $gamePlayer.y);
 
     if (xDiff == 0){
-      if (yDiff > 0){
-        incrementXY = function() { y-- };
-        yDirection = gc.DOWN;
-      } else {
-        incrementXY = function() { y++ };
-        yDirection = gc.UP;
-      }
-    } else if(yDiff == 0){
-      if (xDiff > 0){
-        incrementXY = function() { x-- };
-        xDirection = gc.RIGHT;
-      } else {
-        incrementXY = function() { x++ };
-        xDirection = gc.LEFT;
+      var increment = distance / ($gamePlayer.y - this.y);
+
+      while(this.distanceTo(x,y) < distance) {
+        y += increment;
+
+        if(!$gameMap.isPassable(x, y, direction)){
+          return false;
+        }
       }
     } else {
-      slope = (this.y - $gamePlayer.y) / (this.x - $gamePlayer.x)
+      var slope = (y - $gamePlayer.y) / (x - $gamePlayer.x);
+      var yIntercept = y - slope * x;
+      var increment = distance / ($gamePlayer.x - this.x);
 
-      if slope > 1 {
-        // increment y
-      } else {
-        // increment x
-      }
+      do {
+        x += increment;
+        y = slope * x + yIntercept;
 
-
-      /*
-        If slope is negative and y diff is negative x needs to increase
-        If slope is negative and y diff is positive x needs to decrease
-        If slope is positive and y diff is negative x needs to decrease
-        If slope is positive and y diff is positive x needs to increase
-
-        If slope * y diff is positive x needs to increase
-        If slope * y diff is negative x needs to decrease
-      */
+        if(!$gameMap.isDiagonallyPassable(Math.round(x), Math.round(y), xDirection, yDirection)){
+          return false;
+        }
+      } while(this.distanceTo(x,y) < distance);
     }
 
-    lastDistance = Math.sqrt(Math.pow(this.x - $gamePlayer.x, 2) + Math.pow(this.y - $gamePlayer.y, 2))
-    incrementXY();
-    distance = Math.sqrt(Math.pow(this.x - $gamePlayer.x, 2) + Math.pow(this.y - $gamePlayer.y, 2))
-
-    while (distance < lastDistance && distance != 0) {
-      y = m * x + b;
-
-      if (!$gameMap.isDiagonallyPassable(Math.round(x), Math.round(y), xDirection, yDirection)) {
-        return false;
-      }
-
-      lastDistance = distance
-      incrementXY();
-      distance = Math.sqrt(Math.pow(this.x - $gamePlayer.x, 2) + Math.pow(this.y - $gamePlayer.y, 2))
-    }
-
-    return distance <= 5;
+    return true;
   }
 
   Game_Map.prototype.isDiagonallyPassable = function(x, y, horz, vert) {
     return (!horz || this.isPassable(x, y, hor)) && (!vert || this.isPassable(x, y, vert))
   }
 
-  Game_character.prototype.distanceTo = function(gc) {
-    Math.squrt(Math.pow(this.x - gc.x, 2) + Math.pow(this.y - gc.y, 2))
+  Game_character.prototype.distanceTo = function(x, y) {
+    Math.squrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2))
   }
 
   Game_Character.prototype.moveLeft = function() {
