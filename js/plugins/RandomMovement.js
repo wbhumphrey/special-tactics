@@ -52,6 +52,8 @@
 
   Game_Character.prototype.guardRegion = function(regionId) {
     if(this.canSeePlayer()) {
+      this._trigger = 3;
+      this.setMoveSpeed(4);
       this.moveTowardPlayer();
     } else {
       this.patrolRegion(regionId);
@@ -110,13 +112,7 @@
     var y = this.y;
     var x = this.x;
 
-    var direction = this.direction();
-    var xDirection = this.direction();
-    var yDirection = this.direction();
-
     var xDiff = $gamePlayer.x - this.x;
-    var yDiff = $gamePlayer.y - this.y;
-
     var distance = this.distanceTo($gamePlayer.x, $gamePlayer.y);
 
     if (xDiff == 0){
@@ -125,7 +121,7 @@
       while(this.distanceTo(x,y) < distance) {
         y += increment;
 
-        if(!$gameMap.isTwoWayPassable(x, y, direction)){
+        if(!$gameMap.isTwoWayPassable(x, y, this.direction())){
           return false;
         }
       }
