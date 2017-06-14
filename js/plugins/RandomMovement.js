@@ -50,11 +50,9 @@
     * New Move Commands
     */
 
-  Game_Character.prototype.guardRegion = function(regionId) {
+  Game_Character.prototype.guardRegion = function(regionId, selfSwitch) {
     if(this.canSeePlayer()) {
-      this._trigger = 3;
-      this.setMoveSpeed(4);
-      this.moveTowardPlayer();
+      this.setSelfSwitch(selfSwitch, true);
     } else {
       this.patrolRegion(regionId);
     }
@@ -105,6 +103,11 @@
   Game_Character.LEFT = 4;
   Game_Character.RIGHT = 6;
   Game_Character.UP = 8;
+
+  Game_Character.prototype.setSelfSwitch = function(selfSwitch, value) {
+    var key = [this._mapId, this._eventId, selfSwitch];
+    $gameSelfSwitches.setValue(key, value === true);
+  }
 
   Game_Character.prototype.canSeePlayer = function() {
     var gc = Game_Character;
