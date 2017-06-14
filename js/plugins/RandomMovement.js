@@ -125,30 +125,73 @@
       while(this.distanceTo(x,y) < distance) {
         y += increment;
 
-        if(!$gameMap.isPassable(x, y, direction)){
+        if(!$gameMap.isTwoWayPassable(x, y, direction)){
           return false;
         }
       }
     } else {
       var slope = (y - $gamePlayer.y) / (x - $gamePlayer.x);
       var yIntercept = y - slope * x;
-      var increment = slope == 0 ? 1 : xDiff / slope;
+      var increment = xDiff / distance;
+
+      var prevX = Math.round(x);
+      var prevY = Math.round(y);
+      x += increment;
+      y = slope * x + yIntercept;
 
       while(this.distanceTo(x,y) < distance) {
-        x += increment;
-        y = slope * x + yIntercept;
+        var horz = horizontalDirection(prevX, x);
+        var vert = verticalDirection(prevY, y);
 
-        if(!$gameMap.isDiagonallyPassable(Math.round(x), Math.round(y), xDirection, yDirection)){
+        if(!$gameMap.isDiagonallyPassable(prevX, prevY, horz, vert)){
           return false;
         }
+
+        prevX = Math.round(x);
+        prevY = Math.round(y);
+        x += increment;
+        y = slope * x + yIntercept;
       }
     }
 
     return true;
   }
 
+  function verticalDirection(fromY, toY) {
+    fromY = Math.round(fromY);
+    toY = Math.round(toY);
+    if(toY == fromY) {
+      return null;
+    } else if(toY > fromY){
+      return Game_Character.DOWN;
+    } else {
+      return Game_Character.UP;
+    }
+  }
+
+  function horizontalDirection(fromX, toX) {
+    fromX = Math.round(fromX);
+    toX = Math.round(toX);
+    if(toX == fromX) {
+      return null;
+    } else if(toX > fromX){
+      return Game_Character.RIGHT;
+    } else {
+      return Game_Character.LEFT;
+    }
+  }
+
   Game_Map.prototype.isDiagonallyPassable = function(x, y, horz, vert) {
-    return (!horz || this.isPassable(x, y, horz)) && (!vert || this.isPassable(x, y, vert))
+    return (!horz && !vert) || //No direction provided so return true
+      (horz && this.isTwoWayPassable(x, y, horz)) ||
+      (vert && this.isTwoWayPassable(x, y, vert))
+  }
+
+  Game_Map.prototype.isTwoWayPassable = function(x, y, d) {
+    var x2 = this.roundXWithDirection(x, d);
+    var y2 = this.roundYWithDirection(y, d);
+    var d2 = Game_CharacterBase.prototype.reverseDir(d);
+    return this.isPassable(x, y, d) && this.isPassable(x2, y2, d2)
   }
 
   Game_Character.prototype.distanceTo = function(x, y) {
