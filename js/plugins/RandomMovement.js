@@ -181,20 +181,27 @@
   }
 
   Game_Map.prototype.isDiagonallyPassable = function(x, y, horz, vert) {
-    return (!horz && !vert) || //No direction provided so return true
-      (horz && this.isTwoWayPassable(x, y, horz)) ||
-      (vert && this.isTwoWayPassable(x, y, vert))
+    if(horz && vert) {
+      return (this.isTwoWayPassable(x, y, horz) && this.isTwoWayPassable(this.roundXWithDirection(x, horz), y, vert)) ||
+        (this.isTwoWayPassable(x, y, vert) && this.isTwoWayPassable(x, this.roundYWithDirection(y, vert), horz));
+    } else if(horz){
+      return this.isTwoWayPassable(x, y, horz);
+    } else if(vert){
+      return this.isTwoWayPassable(x, y, vert);
+    } else {
+      return true; //No direction provided so return true
+    }
   }
 
   Game_Map.prototype.isTwoWayPassable = function(x, y, d) {
     var x2 = this.roundXWithDirection(x, d);
     var y2 = this.roundYWithDirection(y, d);
     var d2 = Game_CharacterBase.prototype.reverseDir(d);
-    return this.isPassable(x, y, d) && this.isPassable(x2, y2, d2)
+    return this.isPassable(x, y, d) && this.isPassable(x2, y2, d2);
   }
 
   Game_Character.prototype.distanceTo = function(x, y) {
-    return Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2))
+    return Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2));
   }
 
   Game_Character.prototype.moveLeft = function() {
