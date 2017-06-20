@@ -2288,6 +2288,7 @@ Scene_Battle.prototype.commandSkill = function() {
 };
 
 Scene_Battle.prototype.commandGuard = function() {
+    debugger;
     BattleManager.inputtingAction().setGuard();
     this.selectNextCommand();
 };

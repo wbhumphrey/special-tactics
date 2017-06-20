@@ -1,5 +1,5 @@
 //=============================================================================
-// Random Movement
+// Enhanced Movement
 // by darien
 // Date: 06/08/2017
 
@@ -16,35 +16,7 @@
 
  */
 
-
- // Declare your function
-
-
-// 1.  change *** to your plug ins file name below.
-// You are telling RPG maker that this plugin exsists.
 (function() {
-
-  var parameters = PluginManager.parameters('RandomMovement');
-
-  var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
-  Game_Interpreter.prototype.pluginCommand = function(command, args) {
-    _Game_Interpreter_pluginCommand.call(this, command, args);
-    if (command === 'RandomMovement') {
-      var gc = Game_Character;
-      character = this.character();
-      moveRoute = {
-        list:[
-          {code: gc.ROUTE_TURN_RANDOM, indent: null},
-          // {code: gc.ROUTE_MOVE_FORWARD, indent: null},
-          {}
-        ],
-        repeat: true,
-        skippable: true,
-        wait: true
-      };
-      character.forceMoveRoute(moveRoute);
-    }
-  };
 
   /**
     * New Move Commands
